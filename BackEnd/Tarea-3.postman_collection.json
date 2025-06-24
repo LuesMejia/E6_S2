@@ -1,0 +1,520 @@
+{
+	"info": {
+		"_postman_id": "ef290285-36bf-46a5-84e9-140eab5e4f1a",
+		"name": "Tarea-3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22063658"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const data = pm.response.json();\r",
+							"if (data.token) {\r",
+							"    pm.environment.set(\"token\", data.token);\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"usuario\": \"ADMIN\",\r\n    \"contrasenia\": \"Admin1*\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Combos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/combos",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"combos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get por ID Combos",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "foto_combo",
+							"type": "file",
+							"src": "postman-cloud:///1f03b1ac-50c4-46f0-9f52-8056c71a98e4"
+						},
+						{
+							"key": "nombre",
+							"value": "Combo Desayuno Ejecutivo",
+							"type": "text"
+						},
+						{
+							"key": "descripcion",
+							"value": "Incluye café, sandwich y fruta",
+							"type": "text"
+						},
+						{
+							"key": "productos",
+							"value": "[7,9,10]",
+							"type": "text"
+						},
+						{
+							"key": "descuento",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "estado",
+							"value": "Activo",
+							"type": "text"
+						},
+						{
+							"key": "dias_disponible",
+							"value": "Lunes",
+							"type": "text"
+						},
+						{
+							"key": "restricciones",
+							"value": "Alergicos a la Lactosa",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/combo/683e69413280018e2021128f",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"combo",
+						"683e69413280018e2021128f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Combos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nombre",
+							"value": "Combo Infantil #2",
+							"type": "text"
+						},
+						{
+							"key": "descripcion",
+							"value": "Incluye Hamburguesa de Res, Papas Fritas, Soda y Juguete",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9a9",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9ab",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9b5",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9ac",
+							"type": "text"
+						},
+						{
+							"key": "estado",
+							"value": "Activo",
+							"type": "text"
+						},
+						{
+							"key": "dias_disponible",
+							"value": "Lunes",
+							"type": "text"
+						},
+						{
+							"key": "restricciones",
+							"value": "Alergicos a la Lactosa",
+							"type": "text"
+						},
+						{
+							"key": "popularidad",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "descuento",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "foto_combo",
+							"type": "file",
+							"src": "postman-cloud:///1f040d96-a707-4080-b067-0378e7d3ee0a"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/combos",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"combos"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Combos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nombre",
+							"value": "Combo Hamburgesa de Res",
+							"type": "text"
+						},
+						{
+							"key": "descripcion",
+							"value": "Incluye Hamburguesa de Res, Papas Fritas, Soda y Postre",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9a9",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9ab",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9ac",
+							"type": "text"
+						},
+						{
+							"key": "productos[]",
+							"value": "683e599eaea5e22fb506a9b0",
+							"type": "text"
+						},
+						{
+							"key": "descuento",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "estado",
+							"value": "Activo",
+							"type": "text"
+						},
+						{
+							"key": "dias_disponible",
+							"value": "Martes",
+							"type": "text"
+						},
+						{
+							"key": "restricciones",
+							"value": "Vegetarianos",
+							"type": "text"
+						},
+						{
+							"key": "popularidad",
+							"value": "4.5",
+							"type": "text"
+						},
+						{
+							"key": "foto_combo",
+							"type": "file",
+							"src": "postman-cloud:///1f040f7e-3d76-47d0-bd7c-62462473138b"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/combo/683f62dfe918c60f902a4528",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"combo",
+						"683f62dfe918c60f902a4528"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Combos",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "foto_combo",
+							"type": "file",
+							"src": "postman-cloud:///1f03b1ac-50c4-46f0-9f52-8056c71a98e4"
+						},
+						{
+							"key": "nombre",
+							"value": "Combo Desayuno Ejecutivo",
+							"type": "text"
+						},
+						{
+							"key": "descripcion",
+							"value": "Incluye café, sandwich y fruta",
+							"type": "text"
+						},
+						{
+							"key": "productos",
+							"value": "[7,9,10]",
+							"type": "text"
+						},
+						{
+							"key": "descuento",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "estado",
+							"value": "Activo",
+							"type": "text"
+						},
+						{
+							"key": "dias_disponible",
+							"value": "Lunes",
+							"type": "text"
+						},
+						{
+							"key": "restricciones",
+							"value": "Alergicos a la Lactosa",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/eliminarCombo/683fbbd18f68b0fd5f83f385",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"eliminarCombo",
+						"683fbbd18f68b0fd5f83f385"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Productos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/Productos",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"Productos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get por ID Productos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/Productos/683e599eaea5e22fb506a9ac",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"Productos",
+						"683e599eaea5e22fb506a9ac"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Usuarios",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/Usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Usuarios"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
