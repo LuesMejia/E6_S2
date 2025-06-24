@@ -186,45 +186,46 @@ export const loginUsuario = async (req, res) => {
   try {
     const { usuario, contrasenia } = req.body;
 
-    // Validación de campos
+    
     if (!usuario || !contrasenia) {
       return res.status(400).json({
         message: "Usuario y contraseña son obligatorios",
       });
     }
 
-    // Buscar usuario en la base de datos
     const usuarioEncontrado = await Usuarios.findOne({ usuario });
-    
+
     if (!usuarioEncontrado) {
       return res.status(401).json({
-        message: "Credenciales inválidas", // Mensaje genérico por seguridad
+        message: "Credenciales inválidas",
       });
     }
 
-    // Comparar contraseña hasheada
     const contraseniaValida = await bcrypt.compare(
-      contrasenia, 
+      contrasenia,
       usuarioEncontrado.contrasenia
     );
 
     if (!contraseniaValida) {
       return res.status(401).json({
-        message: "Credenciales inválidas", // Mismo mensaje que arriba
+        message: "Credenciales inválidas",
       });
     }
 
-    // Generar JWT
     const token = jwt.sign(
-      { 
-        id: usuarioEncontrado._id, 
-        rol: usuarioEncontrado.rol 
-      }, 
-      process.env.JWT_SECRET || 'secreto_por_defecto',
-      { expiresIn: '24h' }
+      {
+        id: usuarioEncontrado._id,
+        rol: usuarioEncontrado.rol,
+      },
+      process.env.JWT_SECRET || "secreto_por_defecto",
+      { expiresIn: "24h" }
     );
 
-    // Respuesta exitosa (sin datos sensibles)
+
+    usuarioEncontrado.token = token;
+    await usuarioEncontrado.save();
+
+    
     res.json({
       message: "Inicio de sesión exitoso",
       token,
@@ -232,14 +233,46 @@ export const loginUsuario = async (req, res) => {
         id: usuarioEncontrado._id,
         nombre: usuarioEncontrado.usuario,
         rol: usuarioEncontrado.rol,
-      }
+      },
     });
-
   } catch (error) {
     console.error("Error en login:", error);
     res.status(500).json({
       message: "Error al iniciar sesión",
-      error: error instanceof Error ? error.message : 'Error desconocido',
+      error: error instanceof Error ? error.message : "Error desconocido",
+    });
+  }
+};
+
+
+
+export const logoutUsuario = async (req, res) => {
+  try {
+    // 1. Obtener el ID del usuario del token válido
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+      return res.status(401).json({ message: "No autorizado" });
+    }
+
+    // 2. Verificar y decodificar el token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secreto_por_defecto');
+    
+    // 3. Buscar y actualizar el usuario (borrar token)
+    await Usuarios.findByIdAndUpdate(
+      decoded.id,
+      { $unset: { token: 1 } }, // Elimina el campo token
+      { new: true }
+    );
+
+    // 4. Respuesta exitosa
+    res.status(200).json({ message: "Sesión cerrada correctamente" });
+
+  } catch (error) {
+    console.error("Error en logout:", error);
+    res.status(500).json({
+      message: "Error al cerrar sesión",
+      error: error.message
     });
   }
 };

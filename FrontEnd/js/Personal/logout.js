@@ -1,35 +1,34 @@
-document.getElementById('logout').addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    // 1. Redirigir a la página de login (o la que corresponda)
-    window.location.href = 'login.html';
-    
-    // 2. Limpiar el historial de navegación para evitar que retroceda
+document.getElementById("logout").addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  try {
+    // 1. Limpiar almacenamiento local PRIMERO (acción inmediata)
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // 2. Bloquear historial ANTES de redirigir
     history.pushState(null, null, window.location.href);
-    window.addEventListener('popstate', function() {
-        history.go(1);
-        // Opcional: Redirigir a login si intenta retroceder
-        window.location.href = 'login.html';
+    window.addEventListener("popstate", function (e) {
+      history.pushState(null, null, window.location.href);
+      window.location.replace("./Login.html"); // Fuerza redirección
     });
-    
-    // 3. También puedes limpiar datos de sesión/localStorage si es necesario
-    localStorage.clear();
-    sessionStorage.clear();
-    
-    // 4. Forzar recarga sin caché (opcional)
-    fetch(window.location.href, {
-        headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-        }
+
+    // 3. Llamar al endpoint de logout (puede ser asíncrono)
+    const response = await fetch("http://localhost:3000/logout", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
     });
-});
 
+    if (!response.ok) throw new Error("Error en servidor");
 
-// Ejemplo en el botón de cerrar sesión
-logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem('user');
-    sessionStorage.clear();
-    window.location.replace('login.html'); // no deja volver con 'atrás'
+    // 4. Redirigir SIN historial (usa URL absoluta para mayor seguridad)
+    window.location.replace(window.location.origin + "/Login.html");
+  } catch (error) {
+    console.error("Logout fallido:", error);
+    // Redirigir igualmente aunque falle el API
+    window.location.replace("./Login.html");
+  }
 });

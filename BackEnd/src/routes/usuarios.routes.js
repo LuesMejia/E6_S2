@@ -7,6 +7,7 @@ import {
   putUsuario,
   deleteUsuario,
   loginUsuario,
+  logoutUsuario,
 } from "../controllers/usuarios.controllers.js";
 import { verificarAdmin } from "../middlewares/Autenticar.js";
 
@@ -18,5 +19,6 @@ router.delete("/Usuarios/:id", verificarAdmin, deleteUsuario);
 
 
 router.post("/login", loginUsuario);
+router.post("/logout", logoutUsuario);
 
 export default router;
