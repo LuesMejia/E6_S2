@@ -71,7 +71,7 @@ const cargarOpcionesProductos = async () => {
     const result = await response.json();
 
     const select = document.getElementById("addProductos");
-    
+
     select.innerHTML = "";
 
     result.forEach((producto) => {
@@ -81,13 +81,11 @@ const cargarOpcionesProductos = async () => {
       select.appendChild(option);
     });
     console.log(producto);
-    
   } catch (error) {
     console.error("Error al cargar productos:", error);
     // showAlert("error", "No se pudieron cargar los productos");
   }
 };
-
 
 const cargarOpcionesProductosParaUpdate = async () => {
   try {
@@ -95,7 +93,7 @@ const cargarOpcionesProductosParaUpdate = async () => {
     const result = await response.json();
 
     const select = document.getElementById("updateProductos");
-    
+
     select.innerHTML = "";
 
     result.forEach((producto) => {
@@ -105,13 +103,11 @@ const cargarOpcionesProductosParaUpdate = async () => {
       select.appendChild(option);
     });
     console.log(producto);
-    
   } catch (error) {
     console.error("Error al cargar productos:", error);
     // showAlert("error", "No se pudieron cargar los productos");
   }
 };
-
 
 const cargarCombo = async (page = 1, limit = 5) => {
   try {
@@ -186,12 +182,11 @@ const crearCombos = async () => {
   const descripcion = document.getElementById("addDescripcion").value;
   const estado = document.getElementById("addEstado").value;
 
-const diasSelect = document.getElementById("addDiasDisponible");
-const dias_disponible = Array.from(diasSelect.selectedOptions)
-  .map(option => option.value.trim()) // por si hay espacios
-  .filter(value => value !== "")      // elimina vacíos
-  .join(",");
-
+  const diasSelect = document.getElementById("addDiasDisponible");
+  const dias_disponible = Array.from(diasSelect.selectedOptions)
+    .map((option) => option.value.trim()) // por si hay espacios
+    .filter((value) => value !== "") // elimina vacíos
+    .join(",");
 
   const restricciones = document.getElementById("addRestricciones").value;
   const popularidad = document.getElementById("addPopularidad").value.trim();
@@ -200,7 +195,9 @@ const dias_disponible = Array.from(diasSelect.selectedOptions)
   const foto_combo = document.getElementById("addImagen");
   const productosSelect = document.getElementById("addProductos");
 
-  const productosSeleccionados = Array.from(productosSelect.selectedOptions).map(option => option.value);
+  const productosSeleccionados = Array.from(
+    productosSelect.selectedOptions
+  ).map((option) => option.value);
 
   // Validaciones básicas
   if (!nombre || nombre.length > 100) {
@@ -228,7 +225,7 @@ const dias_disponible = Array.from(diasSelect.selectedOptions)
   formData.append("descuento", descuento);
 
   // Enviar productos como array de IDs
-  productosSeleccionados.forEach(id => {
+  productosSeleccionados.forEach((id) => {
     formData.append("productos[]", id);
   });
 
@@ -244,7 +241,6 @@ const dias_disponible = Array.from(diasSelect.selectedOptions)
       method: "POST",
       headers: {
         Authorization: token,
-        "x-role": role,
       },
       body: formData,
     });
@@ -256,17 +252,15 @@ const dias_disponible = Array.from(diasSelect.selectedOptions)
     await cargarCombo();
     showAlert("success", result.message || "Producto creado exitosamente");
   } catch (error) {
-  const mensaje = error.message.includes("E11000 duplicate key error")
-    ? "Ya existe un combo con ese nombre. Por favor, elige otro nombre."
-    : error.message.includes("Failed to fetch")
-    ? "Error de conexión con el servidor"
-    : error.message;
+    const mensaje = error.message.includes("E11000 duplicate key error")
+      ? "Ya existe un combo con ese nombre. Por favor, elige otro nombre."
+      : error.message.includes("Failed to fetch")
+      ? "Error de conexión con el servidor"
+      : error.message;
 
-  showAlert("error", mensaje);
-}
-
+    showAlert("error", mensaje);
+  }
 };
-
 
 // Editar combo
 const datosDelCombo = async (id) => {
@@ -291,9 +285,11 @@ const datosDelCombo = async (id) => {
     }
 
     // Días disponibles (convertir string a selección múltiple)
-    const diasDisponibleSelect = document.getElementById("updateDiasDisponible");
+    const diasDisponibleSelect = document.getElementById(
+      "updateDiasDisponible"
+    );
     const dias = combo.dias_disponible ? combo.dias_disponible.split(",") : [];
-    Array.from(diasDisponibleSelect.options).forEach(option => {
+    Array.from(diasDisponibleSelect.options).forEach((option) => {
       option.selected = dias.includes(option.value);
     });
 
@@ -301,7 +297,7 @@ const datosDelCombo = async (id) => {
     const productosSelect = document.getElementById("updateProductos");
     const productosCombo = combo.productos || [];
 
-    Array.from(productosSelect.options).forEach(option => {
+    Array.from(productosSelect.options).forEach((option) => {
       option.selected = productosCombo.includes(option.value);
     });
 
@@ -312,28 +308,46 @@ const datosDelCombo = async (id) => {
   }
 };
 
-
 // Actualizar combo
 const actualizarCombo = async () => {
   const comboId = document.getElementById("actualizarComboId").value;
 
   const formData = new FormData();
-  formData.append("nombre", document.getElementById("updateNombre").value.trim());
-  formData.append("descripcion", document.getElementById("updateDescripcion").value.trim());
+  formData.append(
+    "nombre",
+    document.getElementById("updateNombre").value.trim()
+  );
+  formData.append(
+    "descripcion",
+    document.getElementById("updateDescripcion").value.trim()
+  );
   formData.append("estado", document.getElementById("updateEstado").value);
-  formData.append("restricciones", document.getElementById("updateRestricciones").value.trim());
-  formData.append("popularidad", parseFloat(document.getElementById("updatePopularidad").value));
-  formData.append("descuento", parseFloat(document.getElementById("updateDescuento").value));
+  formData.append(
+    "restricciones",
+    document.getElementById("updateRestricciones").value.trim()
+  );
+  formData.append(
+    "popularidad",
+    parseFloat(document.getElementById("updatePopularidad").value)
+  );
+  formData.append(
+    "descuento",
+    parseFloat(document.getElementById("updateDescuento").value)
+  );
 
   // Días disponibles
   const diasSelect = document.getElementById("updateDiasDisponible");
-  const diasSeleccionados = Array.from(diasSelect.selectedOptions).map(option => option.value);
+  const diasSeleccionados = Array.from(diasSelect.selectedOptions).map(
+    (option) => option.value
+  );
   formData.append("dias_disponible", diasSeleccionados.join(","));
 
   // Productos
   const productosSelect = document.getElementById("updateProductos");
-  const productosSeleccionados = Array.from(productosSelect.selectedOptions).map(option => option.value);
-  productosSeleccionados.forEach(id => formData.append("productos", id));
+  const productosSeleccionados = Array.from(
+    productosSelect.selectedOptions
+  ).map((option) => option.value);
+  productosSeleccionados.forEach((id) => formData.append("productos", id));
 
   // Imagen (si se actualiza)
   const foto_combo = document.getElementById("updateImagen");
@@ -349,7 +363,7 @@ const actualizarCombo = async () => {
       method: "PUT",
       headers: {
         Authorization: token,
-        "x-role": role,
+
         // No pongas Content-Type, fetch lo gestiona automáticamente con FormData
       },
       body: formData,
@@ -375,7 +389,6 @@ const actualizarCombo = async () => {
   }
 };
 
-
 // Eliminar combo
 const deleteCombo = async () => {
   if (!comboAElim) return showAlert("error", "No hay combo seleccionado");
@@ -388,7 +401,7 @@ const deleteCombo = async () => {
       method: "DELETE",
       headers: {
         Authorization: token,
-        "x-role": role,
+
         "Content-Type": "application/json",
       },
     });

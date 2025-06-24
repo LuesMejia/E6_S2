@@ -33,14 +33,14 @@ form.addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            //si el login fue exitoso (código 200), guardamos el token y rol en localStorage
+       
             localStorage.setItem('token', data.token);
             localStorage.setItem('rol', data.usuario.rol);
 
 
 
 
-            //redirigimos según el rol del usuario
+      
             window.location.href = data.usuario.rol === 'Administrador' ? './Inventario.html' : './Menu.html';
          
         } else {
